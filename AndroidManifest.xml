@@ -255,7 +255,7 @@
         <activity android:name=".components.ChangeDefaultDialerDialog"
                   android:label="@string/change_default_dialer_dialog_title"
                   android:excludeFromRecents="true"
-                  android:theme="@*android:style/Theme.Material.Light.Dialog.Alert"
+                  android:theme="@*android:style/Theme.Material.DayNight.Dialog.Alert"
                   android:priority="1000"
                   android:process=":ui" >
             <intent-filter>
