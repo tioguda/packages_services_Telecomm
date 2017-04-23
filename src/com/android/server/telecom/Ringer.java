@@ -195,7 +195,7 @@ public class Ringer {
         }
     }
 
-    private boolean[] shouldRingOrVibrateForContact(Uri contactUri) {
+    private boolean shouldRingForContact(Uri contactUri) {
         final NotificationManager manager =
                 (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         final Bundle extras = new Bundle();
