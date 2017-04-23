@@ -134,13 +134,10 @@ public class Ringer {
             Log.i(this, "startRingingOrCallWaiting, skipping because volume is 0");
         }
 
-        if (vibrationAllowed && shouldVibrate(mContext) && !mIsVibrating) {
-            mVibratingCall = foregroundCall;
+        if (shouldVibrate(mContext) && !mIsVibrating) {
             mVibrator.vibrate(VIBRATION_PATTERN, VIBRATION_PATTERN_REPEAT,
                     VIBRATION_ATTRIBUTES);
             mIsVibrating = true;
-        } else if (mIsVibrating) {
-            Log.event(foregroundCall, Log.Events.SKIP_VIBRATION, "already vibrating");
         }
 
         return isRingerAudible;
@@ -208,31 +205,14 @@ public class Ringer {
         return manager.matchesCallFilter(extras);
     }
 
-    private boolean shouldVibrate(Context context, Call call) {
+    private boolean shouldVibrate(Context context) {
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int ringerMode = audioManager.getRingerModeInternal();
-        boolean shouldVibrate;
         if (getVibrateWhenRinging(context)) {
-            shouldVibrate = ringerMode != AudioManager.RINGER_MODE_SILENT;
+            return ringerMode != AudioManager.RINGER_MODE_SILENT;
         } else {
-            shouldVibrate = ringerMode == AudioManager.RINGER_MODE_VIBRATE;
+            return ringerMode == AudioManager.RINGER_MODE_VIBRATE;
         }
-
-        // Technically this should be in the calling method, but it seemed a little odd to pass
-        // around a whole bunch of state just for logging purposes.
-        if (shouldVibrate) {
-            Log.event(call, Log.Events.START_VIBRATOR,
-                    "hasVibrator=%b, userRequestsVibrate=%b, ringerMode=%d, isVibrating=%b",
-                    mVibrator.hasVibrator(), mSystemSettingsUtil.canVibrateWhenRinging(context),
-                    ringerMode, mIsVibrating);
-        } else {
-            Log.event(call, Log.Events.SKIP_VIBRATION,
-                    "hasVibrator=%b, userRequestsVibrate=%b, ringerMode=%d, isVibrating=%b",
-                    mVibrator.hasVibrator(), mSystemSettingsUtil.canVibrateWhenRinging(context),
-                    ringerMode, mIsVibrating);
-        }
-
-        return shouldVibrate;
     }
 
     private boolean getVibrateWhenRinging(Context context) {
