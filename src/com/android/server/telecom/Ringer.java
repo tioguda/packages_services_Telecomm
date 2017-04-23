@@ -117,12 +117,11 @@ public class Ringer {
 
         stopCallWaiting();
 
-        boolean[] shouldRingOrVibrate =
-                shouldRingOrVibrateForContact(foregroundCall.getContactUri());
-        boolean ringAllowed = shouldRingOrVibrate[0];
-        boolean vibrationAllowed = shouldRingOrVibrate[1];
+        if (!shouldRingForContact(foregroundCall.getContactUri())) {
+            return false;
+        }
 
-        if (ringAllowed && isRingerAudible) {
+        if (isRingerAudible) {
             mRingingCall = foregroundCall;
             Log.event(foregroundCall, Log.Events.START_RINGER);
             // Because we wait until a contact info query to complete before processing a
